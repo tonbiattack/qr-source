@@ -62,4 +62,9 @@ describe("slideshow controls", () => {
     const html = buildSlideshowHtml([{ src: "data:image/png;base64,test", index: 1, total: 2 }], 700, 0, true, true);
     expect(html).toContain('id="restart"'); expect(html).toContain("function restart(){clear();i=0;paused=true;render()}"); expect(html).toContain('id="previous"'); expect(html).toContain('id="pause"'); expect(html).toContain('id="next"'); expect(html).toContain("ArrowLeft"); expect(html).toContain("ArrowRight"); expect(html).toContain("Space"); expect(html).toContain('id="fullscreen"');
   });
+
+  it("starts recording mode paused behind a fullscreen start confirmation", () => {
+    const html = buildSlideshowHtml([{ src: "data:image/png;base64,test", index: 1, total: 2 }], 1500, 0, true, false, true);
+    expect(html).toContain('id="start-recording"'); expect(html).toContain("Start recording"); expect(html).toContain("recordingMode=true"); expect(html).toContain("paused=recordingMode"); expect(html).toContain("requestFullscreen"); expect(html).toContain(".recording .info{display:none}"); expect(html).toContain("max-width:96vw");
+  });
 });
