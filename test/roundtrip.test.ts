@@ -58,9 +58,9 @@ describe("video round trip", () => {
 });
 
 describe("slideshow controls", () => {
-  it("uses recording, looping, and 1500ms as the show defaults", () => {
-    expect(resolveShowOptions({})).toMatchObject({ interval: 1500, gap: 0, loop: true, recordingMode: true });
-    expect(resolveShowOptions({ loop: false, recordingMode: false })).toMatchObject({ loop: false, recordingMode: false });
+  it("uses visible controls, looping, and 1500ms as the show defaults", () => {
+    expect(resolveShowOptions({})).toMatchObject({ interval: 1500, gap: 0, loop: true, recordingMode: false });
+    expect(resolveShowOptions({ loop: false, recordingMode: true })).toMatchObject({ loop: false, recordingMode: true });
   });
 
   it("renders pause, restart, previous, next, and keyboard controls", () => {

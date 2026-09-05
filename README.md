@@ -14,17 +14,21 @@ npm run demo
 
 `npm run demo` はサンプルのQR生成、復元、完全一致確認まで行います。
 
-## 主なコマンド
+## 動画で復元する
 
 ```bash
-node dist/index.js encode ./my-project
-node dist/index.js decode ./qr-output
+qr-source encode ./project
+qr-source show ./qr-output
+qr-source decode-video ./capture.mp4
 ```
+
+`show`は1500msごとに表示を切り替え、最後のQRから自動で先頭へ戻ります。コントローラーで進捗を確認しながら、少なくとも2周分を撮影してください。FFmpegのセットアップや詳細は[動画撮影による転送](docs/video-transfer.md)を参照してください。
 
 ## ドキュメント
 
 - [開発環境と `npm link` のセットアップ](docs/setup.md)
 - [スマートフォン写真からの復元](docs/photo-transfer.md)
 - [動画撮影による転送](docs/video-transfer.md)
+- [CLIオプション一覧](docs/cli-options.md)
 - [CLIオプション、安全性、検証](docs/reference.md)
 - [ドキュメント一覧](docs/README.md)
