@@ -45,6 +45,18 @@ qr-source decode ./photos --output ./restored
 
 復元はPNG/JPG/JPEG（拡張子の大文字小文字を問わない）を受け付けます。まず元画像を読み、失敗した画像に限ってグレースケール・コントラスト補正・2倍拡大・90度単位の回転を試します。読めなかった画像は表示しますが、必要なQRがすべて揃っていれば復元を続行します。
 
+### 動画で撮影して復元する
+
+FFmpegをインストールしてPATHへ追加した環境で、QRをブラウザのスライドショーとして表示し、撮影した動画から復元できます。`show` はQR内部のチャンク番号順で表示し、ファイル名は使いません。`--fullscreen` はプレーヤー内の全画面ボタンを表示します。
+
+```bash
+qr-source encode ./project --video-friendly --output ./qr-output
+qr-source show ./qr-output --interval 700 --loop --fullscreen
+qr-source decode-video ./capture.mp4 --scan-fps 5 --output ./restored
+```
+
+`decode-video` はMP4/MOV/WebM/MKVなど、ローカルのFFmpegが読み込める動画を対象にします。PNGフレームをパイプから順次解析し、同じQRを複数フレームから検出しても1件として扱います。全チャンクが揃うとFFmpegを停止します。動画ではQRが十分大きく入る距離で、カメラを固定し、ピント・反射・手ブレに注意して、1周分が終わるまで撮影してください。
+
 - 既定チャンクサイズは 800 バイトです。高密度 QR を避けるため、1200 バイトを上限にしています。
 - ディレクトリ入力では `.git`、`node_modules`、`dist`、`build`、`coverage`、`.DS_Store` を既定で除外します。追加は `--exclude` を複数指定します。
 - 出力先に既存ファイルがあれば中止します。意図的な再利用または上書き時だけ `--force` を指定してください。
