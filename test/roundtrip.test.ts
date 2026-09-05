@@ -60,6 +60,6 @@ describe("video round trip", () => {
 describe("slideshow controls", () => {
   it("renders pause, restart, previous, next, and keyboard controls", () => {
     const html = buildSlideshowHtml([{ src: "data:image/png;base64,test", index: 1, total: 2 }], 700, 0, true, true);
-    expect(html).toContain('id="restart"'); expect(html).toContain('id="previous"'); expect(html).toContain('id="pause"'); expect(html).toContain('id="next"'); expect(html).toContain("ArrowLeft"); expect(html).toContain("ArrowRight"); expect(html).toContain("Space"); expect(html).toContain('id="fullscreen"');
+    expect(html).toContain('id="restart"'); expect(html).toContain("function restart(){clear();i=0;paused=true;render()}"); expect(html).toContain('id="previous"'); expect(html).toContain('id="pause"'); expect(html).toContain('id="next"'); expect(html).toContain("ArrowLeft"); expect(html).toContain("ArrowRight"); expect(html).toContain("Space"); expect(html).toContain('id="fullscreen"');
   });
 });
