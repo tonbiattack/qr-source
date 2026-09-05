@@ -15,6 +15,28 @@ node dist/index.js decode ./qr-output --output ./restored
 
 開発中は `npm run dev -- encode ./my-project` のように実行できます。
 
+## 任意のディレクトリから `qr-source` を実行する（開発用）
+
+このリポジトリには、`package.json` の `bin` と `src/index.ts` の Node.js shebang が設定されています。開発中にグローバルCLIとして試すには、リポジトリのルートで一度だけリンクを作成します。
+
+```bash
+npm install
+npm run build
+npm link
+```
+
+以後は別のディレクトリから、`node dist/index.js` を指定せずに実行できます。
+
+```powershell
+cd C:\work\other-project
+qr-source encode . --output ./qr-output
+qr-source decode ./qr-output --output ./restored
+```
+
+ソースを変更した場合は `npm run build` を再実行してください。通常、`npm link` をやり直す必要はありません。リンクを外す場合は `npm unlink -g qr-source` を実行します。
+
+将来npmへ公開した後は、利用者は `npm install -g qr-source` で同じCLIを導入できます。現時点では未公開のため、開発・検証用途には `npm link` を使用してください。
+
 ## まず動かす
 
 リポジトリ内の `examples/sample-project` は、入れ子のソース・設定・テキストファイルを含む試用用ディレクトリです。次の1コマンドで QR の生成、復元、元ファイルとの完全一致確認まで実行できます。
