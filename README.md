@@ -4,7 +4,7 @@
 
 ## 最短で試す
 
-Node.js 20以降で、次を実行します。
+Node.js 24以降で、次を実行します。
 
 ```bash
 npm install

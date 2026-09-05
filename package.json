@@ -14,7 +14,7 @@
   "license": "ISC",
   "type": "module",
   "bin": { "qr-source": "dist/index.js" },
-  "engines": { "node": ">=20" },
+  "engines": { "node": ">=24" },
   "dependencies": {
     "commander": "^15.0.0",
     "jpeg-js": "^0.4.4",
