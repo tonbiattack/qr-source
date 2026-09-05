@@ -4,6 +4,10 @@ import path from "node:path";
 import os from "node:os";
 import { encode } from "../src/cli/encode.js";
 import { decode } from "../src/cli/decode.js";
+import { writeQr } from "../src/qr/encode.js";
+import { readQr } from "../src/qr/decode.js";
+import { PNG } from "pngjs";
+import jpeg from "jpeg-js";
 let root: string;
 afterEach(async () => { if (root) await fs.rm(root, { recursive: true, force: true }); });
 describe("QR round trip", () => {
@@ -12,6 +16,16 @@ describe("QR round trip", () => {
     await fs.mkdir(path.join(input, "src", "util"), { recursive: true }); await fs.writeFile(path.join(input, "README.md"), "QR round trip\n"); await fs.writeFile(path.join(input, "src", "util", "bytes.bin"), Buffer.from([0, 255, 7, 42, 128]));
     await encode(input, { output: qr, chunkSize: "100", exclude: [], errorCorrection: "M" });
     const qrFiles = (await fs.readdir(qr)).filter(x => x.endsWith(".png")); await Promise.all(qrFiles.map((name, i) => fs.rename(path.join(qr, name), path.join(qr, `renamed-${qrFiles.length - i}.png`))));
+    await fs.copyFile(path.join(qr, "renamed-1.png"), path.join(qr, "IMG_DUPLICATE.JPG")); await fs.writeFile(path.join(qr, "IMG_NOT_A_QR.JPG"), "ordinary photo placeholder");
     await decode(qr, { output: restored }); expect(await fs.readFile(path.join(restored, "README.md"), "utf8")).toBe("QR round trip\n"); expect(await fs.readFile(path.join(restored, "src", "util", "bytes.bin"))).toEqual(Buffer.from([0, 255, 7, 42, 128]));
+  });
+});
+
+describe("photo image recovery", () => {
+  it("reads a rotated JPEG QR image", async () => {
+    root = await fs.mkdtemp(path.join(os.tmpdir(), "qr-source-photo-")); const pngPath = path.join(root, "source.png"), jpegPath = path.join(root, "IMG_1001.JPG"), text = "photo-compatible QR payload";
+    await writeQr(text, pngPath, { correction: "Q", photoFriendly: true }); const image = PNG.sync.read(await fs.readFile(pngPath)); const width = image.height, height = image.width, data = Buffer.alloc(image.data.length);
+    for (let y = 0; y < image.height; y++) for (let x = 0; x < image.width; x++) { const from = (y * image.width + x) * 4, to = (x * width + (width - 1 - y)) * 4; image.data.copy(data, to, from, from + 4); }
+    await fs.writeFile(jpegPath, jpeg.encode({ data, width, height }, 75).data); expect(await readQr(jpegPath)).toBe(text);
   });
 });
