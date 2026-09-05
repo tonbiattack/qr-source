@@ -58,9 +58,14 @@ describe("video round trip", () => {
 });
 
 describe("slideshow controls", () => {
-  it("uses visible controls, looping, and 1500ms as the show defaults", () => {
+  it("uses visible controls, looping, and 2000ms as the show defaults", () => {
     expect(resolveShowOptions({})).toMatchObject({ interval: 2000, gap: 0, loop: true, recordingMode: false });
     expect(resolveShowOptions({ loop: false, recordingMode: true })).toMatchObject({ loop: false, recordingMode: true });
+  });
+
+  it("rejects invalid slideshow timing options", () => {
+    expect(() => resolveShowOptions({ interval: "299" })).toThrow("--interval must be an integer of at least 300 ms");
+    expect(() => resolveShowOptions({ gap: "-1" })).toThrow("--gap must be a non-negative integer");
   });
 
   it("renders pause, restart, previous, next, and keyboard controls", () => {
