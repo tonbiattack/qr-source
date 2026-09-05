@@ -5,7 +5,7 @@ Node.js 20以降が必要です。リポジトリ内から直接実行する場�
 ```bash
 npm install
 npm run build
-node dist/index.js encode ./my-project --output ./qr-output
+node dist/index.js encode ./my-project
 ```
 
 ## `npm link` で任意のディレクトリから実行する
@@ -22,8 +22,8 @@ npm link
 
 ```powershell
 cd C:\work\other-project
-qr-source encode . --output ./qr-output
-qr-source decode ./qr-output --output ./restored
+qr-source encode .
+qr-source decode ./qr-output
 ```
 
 ソース変更後は`npm run build`を再実行します。通常は`npm link`をやり直す必要はありません。リンク解除は`npm unlink -g qr-source`です。npm公開後は`npm install -g qr-source`で導入できる予定ですが、現時点では未公開です。
