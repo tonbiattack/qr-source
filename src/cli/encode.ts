@@ -18,7 +18,7 @@ export async function encode(input: string, options: EncodeOptions): Promise<voi
   console.log(`Files:           ${packed.fileCount}\nOriginal size:   ${bytes(packed.originalSize)}\nCompressed size: ${bytes(packed.data.length)}\nChunks:          ${chunks.length}\n`);
   if (chunks.length >= (friendly ? 50 : 100)) console.warn(`Warning: This operation will generate ${chunks.length} QR codes.${friendly ? " Smartphone transfer may be impractical." : ""}`);
   await fs.mkdir(output, { recursive: true }); console.log("Generating QR codes...\n");
-  if (friendly) console.log(`${options.videoFriendly ? "Video" : "Photo"}-friendly mode: 500-byte default chunks, Q correction, 1024px images, and a wide quiet zone.\n`);
+  if (friendly) console.log(`${options.videoFriendly ? "Video" : "Photo"}-friendly mode: 500-byte default chunks, Q correction, 1080px images, and a wide quiet zone.\n`);
   for (const [index, chunk] of chunks.entries()) { const record: QrChunk = { version: FORMAT_VERSION, projectId, chunkIndex: index, totalChunks: chunks.length, checksum, payload: chunk.toString("base64") }; const name = `qr-${String(index + 1).padStart(4, "0")}.png`; await writeQr(JSON.stringify(record), path.join(output, name), { correction: level as "L" | "M" | "Q" | "H", photoFriendly: friendly }); console.log(`[${index + 1}/${chunks.length}] ${name}`); }
   const manifest: Manifest = { version: FORMAT_VERSION, projectId, createdAt: new Date().toISOString(), totalChunks: chunks.length, checksum, sourceName: packed.sourceName };
   await fs.writeFile(path.join(output, "manifest.json"), JSON.stringify(manifest, null, 2) + "\n"); console.log("\nDone.");

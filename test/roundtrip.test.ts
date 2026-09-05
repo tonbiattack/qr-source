@@ -8,6 +8,7 @@ import { writeQr } from "../src/qr/encode.js";
 import { readQr } from "../src/qr/decode.js";
 import { PNG } from "pngjs";
 import jpeg from "jpeg-js";
+import { randomBytes } from "node:crypto";
 let root: string;
 afterEach(async () => { if (root) await fs.rm(root, { recursive: true, force: true }); });
 describe("QR round trip", () => {
@@ -27,5 +28,14 @@ describe("photo image recovery", () => {
     await writeQr(text, pngPath, { correction: "Q", photoFriendly: true }); const image = PNG.sync.read(await fs.readFile(pngPath)); const width = image.height, height = image.width, data = Buffer.alloc(image.data.length);
     for (let y = 0; y < image.height; y++) for (let x = 0; x < image.width; x++) { const from = (y * image.width + x) * 4, to = (x * width + (width - 1 - y)) * 4; image.data.copy(data, to, from, from + 4); }
     await fs.writeFile(jpegPath, jpeg.encode({ data, width, height }, 75).data); expect(await readQr(jpegPath)).toBe(text);
+  });
+});
+
+describe("friendly QR output", () => {
+  it("round trips a 500-byte video-friendly QR payload", async () => {
+    root = await fs.mkdtemp(path.join(os.tmpdir(), "qr-source-friendly-")); const input = path.join(root, "input"), qr = path.join(root, "qr"), restored = path.join(root, "restored");
+    const payload = randomBytes(750); await fs.mkdir(input); await fs.writeFile(path.join(input, "payload.bin"), payload);
+    await encode(input, { output: qr, exclude: [], videoFriendly: true }); await decode(qr, { output: restored });
+    expect(await fs.readFile(path.join(restored, "payload.bin"))).toEqual(payload);
   });
 });
