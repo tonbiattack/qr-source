@@ -5,7 +5,7 @@
 ```text
 qr-source encode <input> [-o <directory>] [--chunk-size <100..1200>] [--exclude <name>] [--error-correction <L|M|Q|H>] [--photo-friendly|--video-friendly] [--force]
 qr-source decode <qr-directory> [-o <directory>] [--force]
-qr-source show <qr-directory> [--interval <ms>] [--gap <ms>] [--loop] [--fullscreen] [--chunks <indexes>]
+qr-source show <qr-directory> [--interval <ms>] [--gap <ms>] [--loop] [--fullscreen] [--recording-mode] [--chunks <indexes>]
 qr-source decode-video <video> [-o <directory>] [--scan-fps <number>] [--force]
 ```
 
