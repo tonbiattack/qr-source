@@ -12,6 +12,7 @@ import { randomBytes } from "node:crypto";
 import { execFile, execFileSync } from "node:child_process";
 import { promisify } from "node:util";
 import { decodeVideo } from "../src/cli/decode-video.js";
+import { buildSlideshowHtml } from "../src/cli/show.js";
 let root: string;
 const exec = promisify(execFile);
 const hasFfmpeg = (() => { try { execFileSync("ffmpeg", ["-version"], { stdio: "ignore" }); return true; } catch { return false; } })();
@@ -53,5 +54,12 @@ describe("video round trip", () => {
     await encode(input, { output: qr, exclude: [], videoFriendly: true });
     await exec("ffmpeg", ["-y", "-loglevel", "error", "-framerate", "2", "-i", path.join(qr, "qr-%04d.png"), "-c:v", "mpeg4", "-q:v", "2", "-pix_fmt", "yuv420p", video]);
     await decodeVideo(video, { output: restored, scanFps: "5" }); expect(await fs.readFile(path.join(restored, "payload.bin"))).toEqual(payload);
+  });
+});
+
+describe("slideshow controls", () => {
+  it("renders pause, restart, previous, next, and keyboard controls", () => {
+    const html = buildSlideshowHtml([{ src: "data:image/png;base64,test", index: 1, total: 2 }], 700, 0, true, true);
+    expect(html).toContain('id="restart"'); expect(html).toContain('id="previous"'); expect(html).toContain('id="pause"'); expect(html).toContain('id="next"'); expect(html).toContain("ArrowLeft"); expect(html).toContain("ArrowRight"); expect(html).toContain("Space"); expect(html).toContain('id="fullscreen"');
   });
 });

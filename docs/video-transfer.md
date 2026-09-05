@@ -8,7 +8,7 @@ qr-source show ./qr-output --interval 700 --loop --fullscreen
 qr-source decode-video ./capture.mp4 --scan-fps 5 --output ./restored
 ```
 
-`show`はQR内部のチャンク番号順に表示します。`--fullscreen`ではプレーヤー内の全画面ボタンを表示します。動画ではQRが大きく写る距離でカメラを固定し、ピント、反射、手ブレに注意して1周分が終わるまで撮影してください。
+`show`はQR内部のチャンク番号順に表示します。プレーヤーには**First**（1枚目から再開）、**Previous**、**Pause / Resume**、**Next**の操作ボタンがあります。キーボードの`←`/`→`とSpaceでも同じ操作ができます。`--fullscreen`ではプレーヤー内の全画面ボタンを表示します。動画ではQRが大きく写る距離でカメラを固定し、ピント、反射、手ブレに注意して1周分が終わるまで撮影してください。
 
 `decode-video`は、FFmpegが読み込めるMP4/MOV/WebM/MKVなどを対象にします。5fpsを既定としてPNGフレームを順次解析し、重複QRを除外します。全チャンクが揃った時点で解析を停止します。
 
