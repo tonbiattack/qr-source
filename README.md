@@ -22,7 +22,7 @@ qr-source show ./qr-output
 qr-source decode-video ./capture.mp4
 ```
 
-`show`は1500msごとに表示を切り替え、最後のQRから自動で先頭へ戻ります。コントローラーで進捗を確認しながら、少なくとも2周分を撮影してください。FFmpegのセットアップや詳細は[動画撮影による転送](docs/video-transfer.md)を参照してください。
+`show`は2000msごとに表示を切り替え、最後のQRから自動で先頭へ戻ります。コントローラーで進捗を確認しながら、少なくとも2周分を撮影してください。FFmpegのセットアップや詳細は[動画撮影による転送](docs/video-transfer.md)を参照してください。
 
 ## ドキュメント
 

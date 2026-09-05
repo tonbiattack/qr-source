@@ -10,7 +10,7 @@ qr-source decode-video <video> [-o <directory>] [--scan-fps <number>] [--force]
 ```
 
 - `encode`の既定は500バイト、Q訂正、1080px、広いQuiet Zoneです。`--normal`で従来の800バイト、M訂正、1000pxへ戻せます。
-- `show`の既定は1500ms、コントローラー表示、無限ループです。QRを大きく表示したい場合だけ`--recording-mode`を指定します。
+- `show`の既定は2000ms、コントローラー表示、無限ループです。QRを大きく表示したい場合だけ`--recording-mode`を指定します。
 - `.git`、`node_modules`、`dist`、`build`、`coverage`、`.DS_Store`はディレクトリ入力時に除外されます。`--exclude`を複数指定して追加できます。
 - 出力先に既存ファイルがあれば中止します。意図的に再利用・上書きするときだけ`--force`を指定してください。
 

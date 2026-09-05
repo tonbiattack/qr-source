@@ -59,7 +59,7 @@ describe("video round trip", () => {
 
 describe("slideshow controls", () => {
   it("uses visible controls, looping, and 1500ms as the show defaults", () => {
-    expect(resolveShowOptions({})).toMatchObject({ interval: 1500, gap: 0, loop: true, recordingMode: false });
+    expect(resolveShowOptions({})).toMatchObject({ interval: 2000, gap: 0, loop: true, recordingMode: false });
     expect(resolveShowOptions({ loop: false, recordingMode: true })).toMatchObject({ loop: false, recordingMode: true });
   });
 
