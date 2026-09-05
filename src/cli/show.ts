@@ -9,7 +9,10 @@ export interface ShowOptions { interval?: string; gap?: string; loop?: boolean; 
 export interface SlideshowImage { src: string; index: number; total: number; }
 export interface ResolvedShowOptions { interval: number; gap: number; loop: boolean; fullscreen: boolean; recordingMode: boolean; }
 export function resolveShowOptions(options: ShowOptions): ResolvedShowOptions {
-  const interval = Number(options.interval ?? "2000"), gap = Number(options.gap ?? "0"); // 2000ms gives a phone camera time to settle focus/exposure per QR if (!Number.isInteger(interval) || interval < 300) throw new Error("--interval must be an integer of at least 300 ms"); if (!Number.isInteger(gap) || gap < 0) throw new Error("--gap must be a non-negative integer");
+  // 2000ms gives a phone camera time to settle focus and exposure per QR.
+  const interval = Number(options.interval ?? "2000"), gap = Number(options.gap ?? "0");
+  if (!Number.isInteger(interval) || interval < 300) throw new Error("--interval must be an integer of at least 300 ms");
+  if (!Number.isInteger(gap) || gap < 0) throw new Error("--gap must be a non-negative integer");
   return { interval, gap, loop: options.loop !== false, fullscreen: Boolean(options.fullscreen), recordingMode: Boolean(options.recordingMode) };
 }
 export function buildSlideshowHtml(images: SlideshowImage[], interval: number, gap: number, loop: boolean, fullscreen: boolean, recordingMode = false): string {
