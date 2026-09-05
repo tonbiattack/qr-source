@@ -1,0 +1,2 @@
+This fixture intentionally has nested directories.
+Its exact contents are checked after restoration.

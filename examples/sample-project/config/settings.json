@@ -1,0 +1,5 @@
+{
+  "service": "qr-source-demo",
+  "offline": true,
+  "features": ["encode", "decode", "checksum"]
+}

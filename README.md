@@ -15,6 +15,16 @@ node dist/index.js decode ./qr-output --output ./restored
 
 開発中は `npm run dev -- encode ./my-project` のように実行できます。
 
+## まず動かす
+
+リポジトリ内の `examples/sample-project` は、入れ子のソース・設定・テキストファイルを含む試用用ディレクトリです。次の1コマンドで QR の生成、復元、元ファイルとの完全一致確認まで実行できます。
+
+```bash
+npm run demo
+```
+
+結果は `test-tmp/demo/qr-images` と `test-tmp/demo/restored` に残ります。どちらも Git 管理外なので、何度実行しても安全です。
+
 ## 主なオプション
 
 ```text
