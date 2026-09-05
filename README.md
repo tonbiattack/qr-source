@@ -17,8 +17,8 @@ npm run demo
 ## 主なコマンド
 
 ```bash
-node dist/index.js encode ./my-project --output ./qr-output
-node dist/index.js decode ./qr-output --output ./restored
+node dist/index.js encode ./my-project
+node dist/index.js decode ./qr-output
 ```
 
 ## ドキュメント

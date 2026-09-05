@@ -3,13 +3,14 @@
 ## コマンド
 
 ```text
-qr-source encode <input> [-o <directory>] [--chunk-size <100..1200>] [--exclude <name>] [--error-correction <L|M|Q|H>] [--photo-friendly|--video-friendly] [--force]
+qr-source encode <input> [-o <directory>] [--chunk-size <100..600>] [--exclude <name>] [--error-correction <L|M|Q|H>] [--normal] [--force]
 qr-source decode <qr-directory> [-o <directory>] [--force]
-qr-source show <qr-directory> [--interval <ms>] [--gap <ms>] [--loop] [--fullscreen] [--recording-mode] [--chunks <indexes>]
+qr-source show <qr-directory> [--interval <ms>] [--gap <ms>] [--no-loop] [--fullscreen] [--no-recording-mode] [--chunks <indexes>]
 qr-source decode-video <video> [-o <directory>] [--scan-fps <number>] [--force]
 ```
 
-- 通常の既定チャンクサイズは800バイト、上限は1200バイトです。
+- `encode`の既定は500バイト、Q訂正、1080px、広いQuiet Zoneです。`--normal`で従来の800バイト、M訂正、1000pxへ戻せます。
+- `show`の既定は1500ms、録画モード、無限ループです。`--no-loop`と`--no-recording-mode`で無効化できます。
 - `.git`、`node_modules`、`dist`、`build`、`coverage`、`.DS_Store`はディレクトリ入力時に除外されます。`--exclude`を複数指定して追加できます。
 - 出力先に既存ファイルがあれば中止します。意図的に再利用・上書きするときだけ`--force`を指定してください。
 

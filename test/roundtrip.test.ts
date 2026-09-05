@@ -12,7 +12,7 @@ import { randomBytes } from "node:crypto";
 import { execFile, execFileSync } from "node:child_process";
 import { promisify } from "node:util";
 import { decodeVideo } from "../src/cli/decode-video.js";
-import { buildSlideshowHtml } from "../src/cli/show.js";
+import { buildSlideshowHtml, resolveShowOptions } from "../src/cli/show.js";
 let root: string;
 const exec = promisify(execFile);
 const hasFfmpeg = (() => { try { execFileSync("ffmpeg", ["-version"], { stdio: "ignore" }); return true; } catch { return false; } })();
@@ -37,11 +37,11 @@ describe("photo image recovery", () => {
   });
 });
 
-describe("friendly QR output", () => {
-  it("round trips a 500-byte video-friendly QR payload", async () => {
+describe("robust default QR output", () => {
+  it("uses a 500-byte QR profile and round trips an incompressible payload", async () => {
     root = await fs.mkdtemp(path.join(os.tmpdir(), "qr-source-friendly-")); const input = path.join(root, "input"), qr = path.join(root, "qr"), restored = path.join(root, "restored");
     const payload = randomBytes(750); await fs.mkdir(input); await fs.writeFile(path.join(input, "payload.bin"), payload);
-    await encode(input, { output: qr, exclude: [], videoFriendly: true }); await decode(qr, { output: restored });
+    await encode(input, { output: qr, exclude: [] }); expect(PNG.sync.read(await fs.readFile(path.join(qr, "qr-0001.png"))).width).toBe(1080); await decode(qr, { output: restored });
     expect(await fs.readFile(path.join(restored, "payload.bin"))).toEqual(payload);
   });
 });
@@ -58,6 +58,11 @@ describe("video round trip", () => {
 });
 
 describe("slideshow controls", () => {
+  it("uses recording, looping, and 1500ms as the show defaults", () => {
+    expect(resolveShowOptions({})).toMatchObject({ interval: 1500, gap: 0, loop: true, recordingMode: true });
+    expect(resolveShowOptions({ loop: false, recordingMode: false })).toMatchObject({ loop: false, recordingMode: false });
+  });
+
   it("renders pause, restart, previous, next, and keyboard controls", () => {
     const html = buildSlideshowHtml([{ src: "data:image/png;base64,test", index: 1, total: 2 }], 700, 0, true, true);
     expect(html).toContain('id="restart"'); expect(html).toContain("function restart(){clear();i=0;paused=true;render()}"); expect(html).toContain('id="previous"'); expect(html).toContain('id="pause"'); expect(html).toContain('id="next"'); expect(html).toContain("ArrowLeft"); expect(html).toContain("ArrowRight"); expect(html).toContain("Space"); expect(html).toContain('id="fullscreen"');

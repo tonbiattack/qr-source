@@ -36,8 +36,8 @@ Frames scanned: 74
 次の条件で再撮影します。
 
 ```bash
-qr-source encode ./project --video-friendly --chunk-size 300 --output ./qr-output-video
-qr-source show ./qr-output-video --interval 1500 --loop --fullscreen
+qr-source encode ./project
+qr-source show ./qr-output
 ```
 
 1. プレーヤーの`Enter fullscreen`を押す。
@@ -45,7 +45,7 @@ qr-source show ./qr-output-video --interval 1500 --loop --fullscreen
 3. QR全体が大きく入る距離でカメラを固定する。
 4. 14枚なら少なくとも2周分、約45秒を撮影する。
 
-`--chunk-size 300`はQR枚数を増やしますが、1セルを大きくして動画圧縮・ピントずれ・軽い台形歪みに対する余裕を増やします。
+既定値は、動画撮影向けに500バイト、Q訂正、1080px、1500ms、録画モード、無限ループへ更新しました。より低密度にしたい場合だけ`--chunk-size 300`を明示指定します。
 
 ## 実装上の優先対策
 
