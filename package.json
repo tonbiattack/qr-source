@@ -6,6 +6,7 @@
     "build": "tsc",
     "dev": "tsx src/index.ts",
     "test": "vitest run",
+    "demo": "tsx scripts/demo.ts",
     "test:watch": "vitest"
   },
   "keywords": [],
