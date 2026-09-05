@@ -71,6 +71,45 @@ qr-source decode ./photos --output ./restored
 
 FFmpegをインストールしてPATHへ追加した環境で、QRをブラウザのスライドショーとして表示し、撮影した動画から復元できます。`show` はQR内部のチャンク番号順で表示し、ファイル名は使いません。`--fullscreen` はプレーヤー内の全画面ボタンを表示します。
 
+`decode-video` を実行する**同じ環境**で `ffmpeg` コマンドが見つかる必要があります。PowerShellとWSLは別環境なので、使う側にインストールしてください。
+
+#### Windows PowerShell
+
+PowerShellでWindows版FFmpegを導入して確認します。インストール後に新しいPowerShellを開くとPATHの変更が反映されます。
+
+```powershell
+winget install -e --id Gyan.FFmpeg
+ffmpeg -version
+ffprobe -version
+```
+
+そのままWindows側のプロジェクトで実行できます。
+
+```powershell
+cd C:\work\my-project
+qr-source decode-video .\capture.mp4 --scan-fps 5 --output .\restored
+```
+
+#### WSL（Ubuntu / Debian系）
+
+WSL側で実行する場合は、WSLディストリビューション内にFFmpegを導入して確認します。
+
+```bash
+sudo apt update
+sudo apt install -y ffmpeg
+ffmpeg -version
+ffprobe -version
+```
+
+Windows上の動画やリポジトリへアクセスする例です。パスは環境に合わせて変更してください。
+
+```bash
+cd /mnt/c/work/my-project
+qr-source decode-video ./capture.mp4 --scan-fps 5 --output ./restored
+```
+
+`ffmpeg -version` が見つからない場合は、インストール後に新しいターミナルを開きます。PowerShellで導入したFFmpegがWSLのPATHに自動追加されるわけではありません。
+
 ```bash
 qr-source encode ./project --video-friendly --output ./qr-output
 qr-source show ./qr-output --interval 700 --loop --fullscreen
