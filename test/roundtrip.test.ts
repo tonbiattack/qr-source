@@ -9,7 +9,12 @@ import { readQr } from "../src/qr/decode.js";
 import { PNG } from "pngjs";
 import jpeg from "jpeg-js";
 import { randomBytes } from "node:crypto";
+import { execFile, execFileSync } from "node:child_process";
+import { promisify } from "node:util";
+import { decodeVideo } from "../src/cli/decode-video.js";
 let root: string;
+const exec = promisify(execFile);
+const hasFfmpeg = (() => { try { execFileSync("ffmpeg", ["-version"], { stdio: "ignore" }); return true; } catch { return false; } })();
 afterEach(async () => { if (root) await fs.rm(root, { recursive: true, force: true }); });
 describe("QR round trip", () => {
   it("restores nested text and binary files after QR files are renamed", async () => {
@@ -37,5 +42,16 @@ describe("friendly QR output", () => {
     const payload = randomBytes(750); await fs.mkdir(input); await fs.writeFile(path.join(input, "payload.bin"), payload);
     await encode(input, { output: qr, exclude: [], videoFriendly: true }); await decode(qr, { output: restored });
     expect(await fs.readFile(path.join(restored, "payload.bin"))).toEqual(payload);
+  });
+});
+
+describe("video round trip", () => {
+  const videoIt = hasFfmpeg ? it : it.skip;
+  videoIt("restores files from an MP4 generated from QR frames", async () => {
+    root = await fs.mkdtemp(path.join(os.tmpdir(), "qr-source-video-")); const input = path.join(root, "input"), qr = path.join(root, "qr"), video = path.join(root, "capture.mp4"), restored = path.join(root, "restored");
+    const payload = randomBytes(750); await fs.mkdir(input); await fs.writeFile(path.join(input, "payload.bin"), payload);
+    await encode(input, { output: qr, exclude: [], videoFriendly: true });
+    await exec("ffmpeg", ["-y", "-loglevel", "error", "-framerate", "2", "-i", path.join(qr, "qr-%04d.png"), "-c:v", "mpeg4", "-q:v", "2", "-pix_fmt", "yuv420p", video]);
+    await decodeVideo(video, { output: restored, scanFps: "5" }); expect(await fs.readFile(path.join(restored, "payload.bin"))).toEqual(payload);
   });
 });
