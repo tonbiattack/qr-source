@@ -32,6 +32,19 @@ qr-source encode <input> [-o <directory>] [--chunk-size <100..1200>] [--exclude 
 qr-source decode <qr-directory> [-o <directory>] [--force]
 ```
 
+### スマートフォンで撮影して復元する
+
+PCで表示したQRをスマートフォンで撮影し、写真をPC上の1フォルダへコピーして復元できます。撮影順や `IMG_0001.JPG` のようなファイル名は使いません。
+
+```bash
+qr-source encode ./my-project --photo-friendly --output ./qr-output
+qr-source decode ./photos --output ./restored
+```
+
+`--photo-friendly` は既定で500バイトのチャンク、Q訂正、1024px画像、広いQuiet Zoneを使います。明示的なチャンクサイズは600バイトまでです。枚数は増えますが、スマートフォンでの読取りを優先します。撮影時は、QR全体と周囲の余白を入れ、ピント・明るさを確保し、反射・手ブレ・極端な斜め撮影を避けてください。
+
+復元はPNG/JPG/JPEG（拡張子の大文字小文字を問わない）を受け付けます。まず元画像を読み、失敗した画像に限ってグレースケール・コントラスト補正・2倍拡大・90度単位の回転を試します。読めなかった画像は表示しますが、必要なQRがすべて揃っていれば復元を続行します。
+
 - 既定チャンクサイズは 800 バイトです。高密度 QR を避けるため、1200 バイトを上限にしています。
 - ディレクトリ入力では `.git`、`node_modules`、`dist`、`build`、`coverage`、`.DS_Store` を既定で除外します。追加は `--exclude` を複数指定します。
 - 出力先に既存ファイルがあれば中止します。意図的な再利用または上書き時だけ `--force` を指定してください。
